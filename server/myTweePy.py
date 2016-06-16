@@ -6,15 +6,25 @@ from geopy.geocoders import Nominatim
 #override tweepy.StreamListener to add logic to on_status
 
 def handleJSON():
-	jsonOBJ = open('static/data/geoJSON.json')
+	jsonOBJ = open('static/data/geoJSON.json', 'r')
 	Dict = json.loads(jsonOBJ.read())
 	jsonOBJ.close()
 	for i in Dict['features']:
 		i['properties']['colour'] = 'red'
 	newJSON = open('static/data/geoFixed.json','r+')
 	newJSON.write(json.dumps(Dict))
-	return newJSON.read()[:200]
-#	return json.dumps(Dict)
+	Dict = newJSON.read()
+	newJSON.close()
+
+	jsonOBJ = open('static/data/geoNIJSON.json', 'r')
+	Dict = json.loads(jsonOBJ.read())
+	jsonOBJ.close()
+	for i in Dict['features']:
+		i['properties']['colour'] = 'red'
+	newJSON = open('static/data/geoNIFixed.json','r+')
+	newJSON.write(json.dumps(Dict))
+	Dict = newJSON.read()
+	newJSON.close()
 
 tempDex = open('Towns_List.csv').read().lower()
 townDex = tempDex.split('\r\n')
@@ -38,5 +48,5 @@ def main():
 	myStream = tweepy.Stream(auth, listener)
 	myStream.filter(track=['brexit'])
 
-main()
-#handleJSON()
+#main()
+handleJSON()

@@ -34,7 +34,7 @@ function style(feature) {
 var popup = L.popup();
 //try out geoJson
 //https://raw.githubusercontent.com/martinjc/UK-GeoJSON/master/json/administrative/gb/lad.json
-var ukData = $.getJSON("/deliver", function(ladData) {
+var ukData = $.getJSON("/deliver/UK", function(ladData) {
     geojson = L.geoJson(ladData, {
     style: style,
     onEachFeature: onEachFeature,
@@ -42,7 +42,8 @@ var ukData = $.getJSON("/deliver", function(ladData) {
     //ladData.properties.LAD13NM contains placename
 });
 
-$.getJSON("https://raw.githubusercontent.com/martinjc/UK-GeoJSON/master/json/administrative/ni/lgd.json", function(ladData) {
+//https://raw.githubusercontent.com/martinjc/UK-GeoJSON/master/json/administrative/ni/lgd.json
+$.getJSON("/deliver/NI", function(ladData) {
     L.geoJson(ladData, {
     style: style,
     onEachFeature: onEachFeature,
@@ -76,10 +77,17 @@ function resetHighlight(e) {
 }
 
 function handlePopup(e){
-	//console.log(e);
-	 popup
-        .setLatLng(e.latlng)
-        .setContent("This is " + e.target.feature.properties.LAD13NM)
-        .openOn(mymap);
+    //console.log(e);
+    if (e.target.feature.properties.LAD13NM == undefined) {
+         popup
+            .setLatLng(e.latlng)
+            .setContent("This is " + e.target.feature.properties.LGDNAME)
+            .openOn(mymap);
+    }else{
+         popup
+            .setLatLng(e.latlng)
+            .setContent("This is " + e.target.feature.properties.LAD13NM)
+            .openOn(mymap);
+    }
 }
 

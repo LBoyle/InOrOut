@@ -56,6 +56,23 @@
 
 		<div class="container-fluid" style="min-height: 90vh; min-width: 90vw; margin-bottom: 100px; padding-top: 50px;">
 			<h1>Homepage</h1>
+
+			<form action="/index" method="POST">
+				<div>
+					<label for="term">Term</label>
+					<input type="text" id="term" name="term" />
+				</div>
+				<button type="submit">Submit</button>
+			</form>
+
+		{% if items %}
+			{% for key, content in items %}
+				<LI>{{ key }} : <B>{{ content }}</B> </LI>
+			{% endfor %}
+		{% else %}
+			<li><b>No items</b></li>
+		{% endif %}
+
 		</div>
 
 		<!-- Modal -->
@@ -102,7 +119,7 @@
 	    <script>
 		    //custom scripts
 			//function goBack() {
-	    	//window.history.back();
+	    		//window.history.back();
 
 	    </script>
 

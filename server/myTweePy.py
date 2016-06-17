@@ -1,33 +1,24 @@
-import tweepy
-import vaderSentiment
-import json
+import tweepy, vaderSentiment, datetime, __passwd__
+import mongoengine as db
 from tweePyCreds import *
 from geopy.geocoders import Nominatim
 #override tweepy.StreamListener to add logic to on_status
 
-def handleJSON():
-	jsonOBJ = open('static/data/geoJSON.json', 'r')
-	Dict = json.loads(jsonOBJ.read())
-	jsonOBJ.close()
-	for i in Dict['features']:
-		i['properties']['colour'] = 'red'
-	newJSON = open('static/data/geoFixed.json','r+')
-	newJSON.write(json.dumps(Dict))
-	Dict = newJSON.read()
-	newJSON.close()
+#locDict.csv is the names of each area in the map overlay, rather than that list i worked on lol
+tempDex = open('static/data/locDict.csv').read().lower()
+townDex = tempDex.split('\n')
 
-	jsonOBJ = open('static/data/geoNIJSON.json', 'r')
-	Dict = json.loads(jsonOBJ.read())
-	jsonOBJ.close()
-	for i in Dict['features']:
-		i['properties']['colour'] = 'red'
-	newJSON = open('static/data/geoNIFixed.json','r+')
-	newJSON.write(json.dumps(Dict))
-	Dict = newJSON.read()
-	newJSON.close()
+dbname = "louisboyledb"
+user = "ubuntu15.10"
 
-tempDex = open('Towns_List.csv').read().lower()
-townDex = tempDex.split('\r\n')
+c = db.connect(host=("mongodb://{user}:{passwd}@ds011412.mlab.com:11412/{dbname}".format(user=user, passwd=__passwd__.passwd, dbname=dbname)))
+
+class Tweet(db.Document):
+	content = db.StringField()
+	location = db.StringField()
+	timestamp = db.DateTimeField(default=datetime.datetime.now)
+	vCompound = db.FloatField()
+
 def main():	
 	geolocator = Nominatim()
 	class MyStreamListener(tweepy.StreamListener):
@@ -37,7 +28,8 @@ def main():
 					if status.user.location.lower() == town:
 						location = geolocator.geocode(status.user.location)
 						if location.latitude > 49.6 and location.latitude < 60.9 and location.longitude > -8.2 and location.longitude < 1.8:
-							print(status.text.encode('utf8'), status.user.location, location.latitude, location.longitude, vaderSentiment.sentiment(status.text))
+							print (status.text, status.user.location, vaderSentiment.sentiment(status.text)['compound'])
+							Tweet(content = status.text, location = status.user.location, vCompound = vaderSentiment.sentiment(status.text)['compound']).save()
 
 	auth = tweepy.OAuthHandler(auth1, auth2)
 	auth.set_access_token(access1, access2)
@@ -48,5 +40,5 @@ def main():
 	myStream = tweepy.Stream(auth, listener)
 	myStream.filter(track=['brexit'])
 
-#main()
-handleJSON()
+main()
+#handleJSON()

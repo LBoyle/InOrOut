@@ -1,6 +1,7 @@
 from flask import Flask, render_template, url_for, send_file
-import datetime, __passwd__
+import datetime, __passwd__, json
 import mongoengine as db
+from handleJSON import *
 
 app = Flask(__name__)
 
@@ -30,6 +31,7 @@ def overlayNI():
 
 @app.route('/deliver/data')
 def overlayColours():
+	handleJSON()
 	return send_file('static/data/procDict.json', mimetype="text/json")
 
 # testing

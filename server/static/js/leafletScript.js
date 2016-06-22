@@ -51,6 +51,7 @@ $.getJSON("/deliver/NI", function(ladData) {
     //ladData.properties.LAD13NM contains placename
 });
 
+
 function onEachFeature(feature, layer) {
     //console.log(feature.properties.LAD13NM);
     layer.on({

@@ -34,7 +34,7 @@ def handleJSON():
 				blue = ((float(countPos)/float(countPos+countNeg))*255)
 				red = ((float(countNeg)/float(countPos+countNeg))*255)
 
-			resDict[i] = "rgb("+str(int(red))+",0,"+str(int(blue))+")"
+			resDict[i] = "rgb("+str(int(red))+",0,"+str(int(blue))+"), "+str(countNeg)+", "+str(countPos)
 		
 		newJSON = open('static/data/procDict.json','r+')
 		newJSON.write(json.dumps(resDict))

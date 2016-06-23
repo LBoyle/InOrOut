@@ -28,8 +28,9 @@ def main():
 					if status.user.location.lower() == town:
 						location = geolocator.geocode(status.user.location)
 						if location.latitude > 49.6 and location.latitude < 60.9 and location.longitude > -8.2 and location.longitude < 1.8:
-							print (status.text, status.user.location, vaderSentiment.sentiment(status.text)['compound'])
-							Tweet(content = status.text, location = status.user.location, vCompound = vaderSentiment.sentiment(status.text)['compound']).save()
+							vCompound = vaderSentiment.sentiment(status.text)['compound']
+							print (status.text, status.user.location, vCompound)
+							Tweet(content = status.text, location = status.user.location, vCompound = vCompound).save()
 
 	auth = tweepy.OAuthHandler(auth1, auth2)
 	auth.set_access_token(access1, access2)
@@ -41,4 +42,3 @@ def main():
 	myStream.filter(track=['brexit'])
 
 main()
-#handleJSON()

@@ -71,6 +71,7 @@ function getColour(ladName, colourData){
 function getNums(ladName, colourData){
     for (var i=0; i<colourData.features.length; i++){
         if (ladName == colourData.features[i]['loc']){
+            console.log(colourData.features[i]['nums']);
             return colourData.features[i]['nums'];
         }
     }
